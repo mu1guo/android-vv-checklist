@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "compose-host-map.schema.json",
+  "title": "compose_host_map",
+  "description": "阶段②产物：feature_path → 宿主页精确映射（Compose，tap_by=text）。",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "required": ["host_id", "component_id", "tap_text"],
+    "properties": {
+      "host_id": { "type": "string" },
+      "component_id": { "type": ["string", "null"] },
+      "tap_text": { "type": "string" },
+      "tap_by": { "type": "string", "const": "text" },
+      "code_anchor": { "type": "string" },
+      "expected": { "type": ["string", "null"] },
+      "to_page": { "type": ["string", "null"] },
+      "precondition": { "type": ["string", "null"] }
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "toolkit-fact-tree.schema.json",
+  "title": "compose-fact-tree",
+  "description": "阶段①产物：Compose 源码 → 结构事实层 fact-tree。权威键 $schema_version=1。",
+  "type": "object",
+  "required": ["$schema_version", "pages", "dialogs", "flow_graph", "stats"],
+  "properties": {
+    "$schema_version": { "type": "integer", "const": 1 },
+    "schema_version": { "type": "integer" },
+    "source": { "type": "object" },
+    "app": {
+      "type": "object",
+      "properties": {
+        "package": { "type": ["string", "null"] },
+        "label": { "type": ["string", "null"] },
+        "launcher_activity": { "type": ["string", "null"] },
+        "launcher_short": { "type": ["string", "null"] }
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "screens"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": ["string", "null"] },
+          "screens": { "type": "array", "items": { "type": "string" } },
+          "strategy": { "type": "string" }
+        }
+      }
+    },
+    "pages": { "type": "array", "items": { "$ref": "#/definitions/record" } },
+    "fragments": { "type": "array", "items": { "$ref": "#/definitions/record" } },
+    "dialogs": { "type": "array", "items": { "$ref": "#/definitions/record" } },
+    "flow_graph": {
+      "type": "object",
+      "properties": {
+        "nodes": { "type": "array", "items": { "type": "object" } },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": ["string", "null"] },
+              "via_component": { "type": ["string", "null"] },
+              "trigger": { "type": "string" },
+              "is_dynamic": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "stats": { "type": "object" }
+  },
+  "definitions": {
+    "record": {
+      "type": "object",
+      "required": ["id", "type", "screen_kind", "components", "navigation"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "screen_kind": { "type": "string" },
+        "label": { "type": ["string", "null"] },
+        "purpose": { "type": ["string", "null"] },
+        "android_file": { "type": ["string", "null"] },
+        "logical_feature_id": { "type": ["string", "null"] },
+        "route": { "type": ["string", "null"] },
+        "is_start_destination": { "type": "boolean" },
+        "contains": { "type": "array", "items": { "type": "string" } },
+        "shows_dialogs": { "type": "array", "items": { "type": "string" } },
+        "components": { "type": "array", "items": { "$ref": "#/definitions/component" } },
+        "navigation": {
+          "type": "object",
+          "properties": {
+            "inbound": { "type": "array", "items": { "$ref": "#/definitions/edge" } },
+            "outbound": { "type": "array", "items": { "$ref": "#/definitions/edge" } },
+            "unresolved_hints": { "type": "array", "items": { "type": "object" } }
+          }
+        },
+        "reach_paths": { "type": "array" },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "component": {
+      "type": "object",
+      "required": ["id", "type", "is_interactive"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "parent_id": { "type": ["string", "null"] },
+        "text": { "type": ["string", "null"] },
+        "content_desc": { "type": ["string", "null"] },
+        "is_interactive": { "type": "boolean" },
+        "triggers": { "type": "array", "items": { "type": "string" } },
+        "navigation": {
+          "type": ["object", "null"],
+          "properties": {
+            "to_page": { "type": ["string", "null"] },
+            "trigger": { "type": "string" },
+            "params": {},
+            "is_dynamic": { "type": "boolean" }
+          }
+        },
+        "source_anchor": {
+          "type": ["object", "null"],
+          "properties": {
+            "file": { "type": ["string", "null"] },
+            "line": { "type": ["integer", "null"] }
+          }
+        },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": ["string", "null"] },
+        "via_component": { "type": ["string", "null"] },
+        "trigger": { "type": "string" },
+        "params": {},
+        "is_dynamic": { "type": "boolean" },
+        "source": { "type": "string" }
+      }
+    }
+  }
+}

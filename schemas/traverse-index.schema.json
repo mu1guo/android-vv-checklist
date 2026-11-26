@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "traverse-index.schema.json",
+  "title": "traverse_index",
+  "description": "阶段④产物：真机边遍历账本，每屏一个 unit。host_id 可选，用于关联 fact-tree 页。",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["page_id", "label", "screenshot"],
+    "properties": {
+      "page_id": { "type": "string" },
+      "host_id": { "type": ["string", "null"] },
+      "label": { "type": "string" },
+      "timestamp": { "type": "string" },
+      "clickable_count": { "type": "integer" },
+      "screenshot": { "type": "string" },
+      "view_xml": { "type": ["string", "null"] },
+      "manual_traverse": { "type": "boolean" }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "page_id": "page_0001_Home",
+    "host_id": "HomeScreen",
+    "label": "Home",
+    "timestamp": "2026-11-26T10:00:00+08:00",
+    "clickable_count": 4,
+    "screenshot": "page_0001_Home/screenshot.png",
+    "view_xml": "page_0001_Home/view.xml",
+    "manual_traverse": true
+  },
+  {
+    "page_id": "page_0002_Settings",
+    "host_id": "SettingsScreen",
+    "label": "Settings",
+    "timestamp": "2026-11-26T10:00:05+08:00",
+    "clickable_count": 1,
+    "screenshot": "page_0002_Settings/screenshot.png",
+    "view_xml": "page_0002_Settings/view.xml",
+    "manual_traverse": true
+  },
+  {
+    "page_id": "page_0003_Detail",
+    "label": "Detail",
+    "timestamp": "2026-11-26T10:00:10+08:00",
+    "clickable_count": 1,
+    "screenshot": "page_0003_Detail/screenshot.png",
+    "view_xml": "page_0003_Detail/view.xml",
+    "manual_traverse": true
+  }
+]

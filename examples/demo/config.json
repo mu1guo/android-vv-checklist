@@ -1,0 +1,11 @@
+{
+  "app_name": "Demo",
+  "app_package": "com.example.demo",
+  "architecture": "纯 Compose（无 XML/resource-id）；控件锚点用文案，源码位置用 .kt 相对路径",
+  "account_state": "无账号体系（本地 mock）",
+  "traverse_notes": "3/5 屏实走（Home / Settings / Detail）；ConfirmDialog 为条件弹窗、MainActivity 为 Activity 壳（同 Home 屏），未单列",
+  "output_prefix": "Demo_安卓功能清单",
+  "device_map": {
+    "MainActivity": "page_0001_Home"
+  }
+}

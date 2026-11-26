@@ -1,0 +1,251 @@
+{
+  "$schema_version": 1,
+  "schema_version": 1,
+  "source": {
+    "toolkit": "compose-fact-tree",
+    "generated_at": "2026-11-26T00:00:00+00:00",
+    "android_root": "examples/demo/src"
+  },
+  "app": {
+    "package": "com.example.demo",
+    "label": "Demo",
+    "launcher_activity": "com.example.demo.MainActivity",
+    "launcher_short": "MainActivity",
+    "min_sdk": 24,
+    "target_sdk": 35,
+    "version_name": "1.0.0"
+  },
+  "features": [
+    {
+      "id": "compose.ui.home",
+      "label": "Home",
+      "screens": ["MainActivity", "HomeScreen", "SettingsScreen", "DetailScreen", "ConfirmDialog"],
+      "top_tokens": ["home", "settings", "detail"],
+      "strategy": "compose_package_cluster"
+    }
+  ],
+  "pages": [
+    {
+      "id": "MainActivity",
+      "type": "Activity",
+      "screen_kind": "activity_shell",
+      "label": "Main",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/MainActivity.kt",
+      "logical_feature_id": "compose.ui.home",
+      "route": null,
+      "is_start_destination": false,
+      "contains": ["HomeScreen"],
+      "shows_dialogs": [],
+      "components": [],
+      "navigation": {"inbound": [], "outbound": [], "unresolved_hints": []},
+      "reach_paths": [],
+      "notes": null
+    },
+    {
+      "id": "HomeScreen",
+      "type": "Composable",
+      "screen_kind": "page",
+      "label": "Home",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/ui/HomeScreen.kt",
+      "logical_feature_id": "compose.ui.home",
+      "route": "home",
+      "is_start_destination": true,
+      "contains": [],
+      "shows_dialogs": ["ConfirmDialog"],
+      "components": [
+        {
+          "id": "home_settings_button",
+          "type": "IconButton",
+          "parent_id": null,
+          "text": null,
+          "content_desc": "Settings",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": "SettingsScreen", "trigger": "click", "params": null, "is_dynamic": false},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/ui/HomeScreen.kt", "line": 42},
+          "notes": null
+        },
+        {
+          "id": "home_item",
+          "type": "Card",
+          "parent_id": null,
+          "text": "Item",
+          "content_desc": null,
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": "DetailScreen", "trigger": "click", "params": null, "is_dynamic": false},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/ui/HomeScreen.kt", "line": 60},
+          "notes": "数据驱动列表：卡片按同构家族压缩为 1 条"
+        },
+        {
+          "id": "home_confirm_button",
+          "type": "Button",
+          "parent_id": null,
+          "text": "Confirm",
+          "content_desc": null,
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": "ConfirmDialog", "trigger": "click", "params": null, "is_dynamic": false},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/ui/HomeScreen.kt", "line": 80},
+          "notes": null
+        },
+        {
+          "id": "home_more_button",
+          "type": "IconButton",
+          "parent_id": null,
+          "text": null,
+          "content_desc": "More",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": null,
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/ui/HomeScreen.kt", "line": 90},
+          "notes": "no-op stub（onClick = { /* todo */ }）"
+        }
+      ],
+      "navigation": {
+        "inbound": [],
+        "outbound": [
+          {"to": "SettingsScreen", "via_component": "home_settings_button", "trigger": "click", "params": null, "is_dynamic": false, "source": "compose_nav"},
+          {"to": "DetailScreen", "via_component": "home_item", "trigger": "click", "params": null, "is_dynamic": false, "source": "compose_nav"},
+          {"to": "ConfirmDialog", "via_component": "home_confirm_button", "trigger": "click", "params": null, "is_dynamic": false, "source": "compose_nav"}
+        ],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": null
+    },
+    {
+      "id": "SettingsScreen",
+      "type": "Composable",
+      "screen_kind": "page",
+      "label": "Settings",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/ui/SettingsScreen.kt",
+      "logical_feature_id": "compose.ui.home",
+      "route": "settings",
+      "is_start_destination": false,
+      "contains": [],
+      "shows_dialogs": [],
+      "components": [
+        {
+          "id": "settings_back",
+          "type": "IconButton",
+          "parent_id": null,
+          "text": null,
+          "content_desc": "Back",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": null, "trigger": "back", "params": null, "is_dynamic": true},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/ui/SettingsScreen.kt", "line": 30},
+          "notes": null
+        }
+      ],
+      "navigation": {
+        "inbound": [{"from": "HomeScreen", "via_component": "home_settings_button", "trigger": "click", "params": null, "is_dynamic": false, "source": "compose_nav"}],
+        "outbound": [],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": null
+    },
+    {
+      "id": "DetailScreen",
+      "type": "Composable",
+      "screen_kind": "page",
+      "label": "Detail",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/ui/DetailScreen.kt",
+      "logical_feature_id": "compose.ui.home",
+      "route": "detail",
+      "is_start_destination": false,
+      "contains": [],
+      "shows_dialogs": [],
+      "components": [
+        {
+          "id": "detail_save",
+          "type": "Button",
+          "parent_id": null,
+          "text": "Save",
+          "content_desc": null,
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": null,
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/ui/DetailScreen.kt", "line": 55},
+          "notes": null
+        }
+      ],
+      "navigation": {
+        "inbound": [{"from": "HomeScreen", "via_component": "home_item", "trigger": "click", "params": null, "is_dynamic": false, "source": "compose_nav"}],
+        "outbound": [],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": null
+    }
+  ],
+  "fragments": [],
+  "dialogs": [
+    {
+      "id": "ConfirmDialog",
+      "type": "Composable",
+      "screen_kind": "dialog",
+      "label": "Confirm",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/ui/ConfirmDialog.kt",
+      "logical_feature_id": "compose.ui.home",
+      "route": null,
+      "is_start_destination": false,
+      "contains": [],
+      "shows_dialogs": [],
+      "components": [
+        {
+          "id": "confirm_ok",
+          "type": "Button",
+          "parent_id": null,
+          "text": "OK",
+          "content_desc": null,
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": null,
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/ui/ConfirmDialog.kt", "line": 20},
+          "notes": null
+        }
+      ],
+      "navigation": {
+        "inbound": [{"from": "HomeScreen", "via_component": "home_confirm_button", "trigger": "click", "params": null, "is_dynamic": false, "source": "compose_nav"}],
+        "outbound": [],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": "条件弹窗（完成操作后弹出）"
+    }
+  ],
+  "flow_graph": {
+    "nodes": [
+      {"id": "MainActivity", "type": "Activity", "label": "Main"},
+      {"id": "HomeScreen", "type": "Composable", "label": "Home"},
+      {"id": "SettingsScreen", "type": "Composable", "label": "Settings"},
+      {"id": "DetailScreen", "type": "Composable", "label": "Detail"},
+      {"id": "ConfirmDialog", "type": "Composable", "label": "Confirm"}
+    ],
+    "edges": [
+      {"from": "HomeScreen", "to": "SettingsScreen", "via_component": "home_settings_button", "trigger": "click", "is_dynamic": false},
+      {"from": "HomeScreen", "to": "DetailScreen", "via_component": "home_item", "trigger": "click", "is_dynamic": false},
+      {"from": "HomeScreen", "to": "ConfirmDialog", "via_component": "home_confirm_button", "trigger": "click", "is_dynamic": false}
+    ]
+  },
+  "dependency_graph": null,
+  "stats": {
+    "total_pages": 4,
+    "total_fragments": 0,
+    "total_dialogs": 1,
+    "total_components": 6,
+    "total_navigation_edges": 3,
+    "total_features": 1,
+    "dynamic_targets": 1,
+    "components_with_parent": 0,
+    "uncertain_items": 0
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "test-intents.schema.json",
+  "title": "test_intents",
+  "description": "阶段②产物：测试意图 + 预期结果判据（steps 内嵌「预期结果：」）。",
+  "type": "object",
+  "required": ["groups"],
+  "properties": {
+    "app_package_name": { "type": ["string", "null"] },
+    "groups": {
+      "type": "object",
+      "properties": {
+        "independent": { "type": "array", "items": { "$ref": "#/definitions/intent" } },
+        "setup": { "type": "array", "items": { "$ref": "#/definitions/intent" } },
+        "dependent": { "type": "array", "items": { "$ref": "#/definitions/intent" } },
+        "blocked": { "type": "array", "items": { "$ref": "#/definitions/intent" } }
+      }
+    }
+  },
+  "definitions": {
+    "intent": {
+      "type": "object",
+      "required": ["feature_path", "steps"],
+      "properties": {
+        "feature_path": { "type": "string" },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "expected_source": { "type": "string" },
+        "precondition_required": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Generated artifacts (re-run the scripts to reproduce)
+**/spec/a2h/
+spec/.cache/
+*.xlsx
+*.merged.json
+*_ecat_checklist.md
+
+# OS
+.DS_Store
+Thumbs.db
