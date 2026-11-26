@@ -6,13 +6,14 @@
 
 顶层：`$schema_version`(int, 权威键 =1)、`source`、`app`、`features[]`、`pages[]`、`fragments[]`、`dialogs[]`、`flow_graph`、`stats`。
 
-**page / dialog record**（`pages[]` + `dialogs[]`，字段形状相同）：
+**page / dialog record**（`pages[]` + `fragments[]` + `dialogs[]`，字段形状相同）：
 
 ```jsonc
 {
   "id": "RecipeList",                 // 唯一；type-safe 用 Route 子类型名
-  "type": "Composable",               // host Activity 用 "Activity"
-  "screen_kind": "page",              // page | dialog | fragment | activity_shell | nav_shell
+  "type": "Composable",               // Compose 用 "Composable"；View 用 "Activity"/"Fragment"/"Dialog"
+  "screen_kind": "page",              // page | dialog | fragment | activity | activity_shell | nav_shell
+  "framework": "compose",             // compose | view | hybrid（app/page/component 三级，缺省 compose）
   "label": "Recipe list",             // 人类可读（LLM 兜底可填，否则 null）
   "purpose": null,                    // 留给下游
   "android_file": "app/src/.../RecipeList.kt",
@@ -26,15 +27,18 @@
 }
 ```
 
-**component**（`pages[].components[]`，阶段 ② 只消费 `is_interactive` / `text` / `content_desc` / `type` / `id` / `navigation` / `source_anchor`）：
+**component**（`pages[].components[]`，阶段 ② 消费 `is_interactive` / `framework` / `text` / `content_desc` / `resource_id` / `type` / `id` / `navigation` / `source_anchor`）：
 
 ```jsonc
 {
   "id": "recipe_settings_button",
   "type": "IconButton",
   "parent_id": null,
-  "text": null,                       // stringResource 解析后的真文案 或 null
-  "content_desc": "Settings",         // contentDescription 或 null
+  "framework": "compose",             // compose | view（view 组件用 resource-id 锚点）
+  "text": null,                       // 文案真值（compose: stringResource 解析 / view: android:text 或 @string 解析）
+  "content_desc": "Settings",         // contentDescription 或 android:contentDescription
+  "resource_id": null,                // View 控件 android:id 全名（如 com.example:id/btn_x）；Compose 为 null
+  "click_handler": null,              // View 监听器方法名（如 onSettingsClick）；Compose 为 null
   "is_interactive": true,
   "triggers": ["click"],
   "navigation": {"to_page": "AppSettings", "trigger": "click", "params": null, "is_dynamic": false},
@@ -43,18 +47,22 @@
 }
 ```
 
+> View 方言下 `source_anchor.file` 优先指向挂监听器的 `.kt/.java`（无监听器时用 layout `.xml`）；`resource_id` = `{applicationId}:id/{x}`。
+
 **navigation edge**（`navigation.outbound[]` / `flow_graph.edges[]`）：`{to, via_component, trigger, params, is_dynamic, source}`；`inbound[]` 是其反转 `{from, via_component, ...}`。
 
 ## 2. `spec/a2h/functional_registry.json`（阶段 ② 产物）
 
 ```jsonc
 {"entries": [
-  {"name": "Settings",                       // 交互组件文案
+  {"name": "Settings",                       // 交互组件文案（显示名，永远取人话文案）
    "depth": 2,
    "feature_path": "Recipe list>Settings",   // "页面label>name"，join 主键
    "source_file": "app/src/.../RecipeList.kt",
-   "source_section": "compose_iconbutton",   // "compose_" + type.lower()
-   "raw_identifier": "Settings"}             // 锚点 = 文案（Compose 无 resource-id）
+   "source_section": "compose_iconbutton",   // "compose_"/"view_" + type.lower()
+   "raw_identifier": "Settings",             // 锚点：compose=文案；view=resource_id（如 com.example:id/btn_x）
+   "anchor_type": "text",                    // "text" | "resource_id"
+   "resource_id": null}                      // view 控件的 android:id 全名，compose 为 null
 ]}
 ```
 
@@ -66,8 +74,10 @@
 {"Recipe list>Settings": {
   "host_id": "RecipeList",                   // fact-tree page id
   "component_id": "recipe_settings_button",
-  "tap_text": "Settings",                    // 真机点击锚点
-  "tap_by": "text",
+  "tap_text": "Settings",                    // 真机点击锚点文案（view 无文案时兜底 resource_id 短名）
+  "tap_by": "text",                          // "text"（compose）| "resource_id"（view 且有 resource_id）
+  "anchor_type": "text",                     // 同 tap_by
+  "resource_id": null,                       // view 控件的 android:id 全名，compose 为 null
   "code_anchor": "app/src/.../RecipeList.kt:88",
   "expected": "点击后跳转到 AppSettings 页面",  // 由 navigation.to_page 派生
   "to_page": "AppSettings",

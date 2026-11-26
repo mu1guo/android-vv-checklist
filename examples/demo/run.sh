@@ -5,11 +5,11 @@ cd "$(dirname "$0")"
 
 ROOT="$(cd ../.. && pwd)"
 
-echo "== ② compose_registry_from_tree =="
-python3 "$ROOT/src/compose_registry_from_tree.py" --tree spec/toolkit-fact-tree.json --out spec/a2h
+echo "== ② registry_from_tree =="
+python3 "$ROOT/src/registry_from_tree.py" --tree spec/toolkit-fact-tree.json --out spec/a2h
 
-echo "== ③ compose_merge_into_facttree（注入 functional_checks，写到 merged 文件，不动输入）=="
-python3 "$ROOT/src/compose_merge_into_facttree.py" \
+echo "== ③ merge_into_facttree（注入 functional_checks，写到 merged 文件，不动输入）=="
+python3 "$ROOT/src/merge_into_facttree.py" \
     --facttree spec/toolkit-fact-tree.json \
     --registry spec/a2h/functional_registry.json \
     --host-map spec/a2h/compose_host_map.json \

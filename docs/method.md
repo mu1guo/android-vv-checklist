@@ -14,14 +14,14 @@
 
 Jetsnack 实测：vv source-first 清单 + `.kt` 补锚 喂 ECAT，优于 HiTest device-first——多修 1 个真 bug、省 37% token、0 幻影（见 `docs/` 外的迁移评测报告）。**结论：功能点的完备性由源码保证，设备只负责回填「可达性 / 实测结果 / 截图」。**
 
-## 2. 为什么纯 Compose 只有阶段 ① 是 LLM
+## 2. 为什么只有阶段 ① 是 LLM（原生三态都成立）
 
-- 阶段 ① `compose-fact-tree` 是语义推理：哪些 `@Composable` 是 page/dialog、导航边从哪个 clickable 发起、`stringResource` 解析到真文案——**必须 LLM 读源码**。
-- 阶段 ② `compose_registry_from_tree` 是投影：fact-tree 已经把交互组件抽进 `pages[].components[]`（含 text / navigation / source_anchor），宿主页天然已知。**把交互组件逐条抄成 registry / host_map / intents 是确定性操作**，没有新推理。
-- 阶段 ③ merge 是把 host_map 精确挂回 fact-tree，同样是确定性映射（`feature_path → host_id`）。
+- 阶段 ① `android-fact-tree`（纯 Compose 时用 `compose-fact-tree` 子集）是语义推理：哪些 `@Composable`/Activity/Fragment 是 page/dialog、导航边从哪个 clickable/listener 发起、`stringResource`/`@string` 解析到真文案、View 控件带哪个 `android:id` + 监听器——**必须 LLM 读源码**。
+- 阶段 ② `registry_from_tree` 是投影：fact-tree 已经把交互组件抽进 `pages[].components[]`（含 text / resource_id / navigation / source_anchor），宿主页天然已知。**把交互组件逐条抄成 registry / host_map / intents 是确定性操作**，没有新推理；唯一区别是按 `framework` 切换锚点（view 用 `resource_id`，compose 用文案）。
+- 阶段 ③ merge 是把 host_map 精确挂回 fact-tree，同样是确定性映射（`feature_path → host_id`），框架无关。
 - 阶段 ⑤ gen_func_list 是纯组装。
 
-> 对比 XML/View 架构：XML 阶段 ② 的 registry 需要 LLM 读源码补 dialog/context_menu/代码级交互（无 XML 布局、无 resource-id 时）。**纯 Compose 没有 XML 布局、没有 resource-id，所以 registry 塌缩成确定性旁路。**本仓库面向纯 Compose（Cofi / Jetsnack 均为纯 Compose），故只保留这条旁路。
+> 关键：**语义推理（哪些是页、锚点是什么、跳转到哪）全部压进阶段 ①**，无论 Compose 还是 View。View 的 resource-id / listener / `startActivity` / `nav_graph.xml` 解析同样由 LLM 在阶段 ① 完成并写进 fact-tree，阶段 ② 只需读 `resource_id` 字段做确定性投影。因此「只有阶段 ① 是 LLM」对三态都成立——v1 之所以只写了 Compose，是因为纯 Compose 没有 XML/resource-id，锚点塌缩成单一「文案」；v2 补上 `framework` + `resource_id` 后，同样的确定性旁路原样覆盖 View/hybrid。
 
 ## 3. 关键坑（真实踩过）
 
@@ -35,7 +35,16 @@ Jetsnack 实测：vv source-first 清单 + `.kt` 补锚 喂 ECAT，优于 HiTest
 8. **空实现 vs 真跳转**：expected 判定（「点击后跳转到 X」vs「click 后触发对应行为」）必须从源码 handler 下钻，不按函数名字面猜。
 9. **数据驱动列表内的同名泛化字段**：列表项卡片里同名字段（如「Name」「Save」）在 LLM 端会被追加 `(component_id)` 消歧为 `Name (step_name)`；这是 compose-fact-tree 阶段的语义判断（`enclosing_fn` 落在子 composable 里）。`compose_registry_from_tree.py` 的确定性投影只取 `text`/`content_desc` 裸文案，不追 `(id)` 后缀——因此 registry 名是裸「Name」。**影响仅限显示名，feature_path 与宿主映射仍唯一正确**（`Edit recipe>Name` 与 `Add recipe>Name` 靠层级路径区分）。已验证真实 Cofi：114/114 条结构与宿主映射一致，仅 4 条列表字段名差 `(id)` 后缀。
 
-## 4. 口径
+## 4. View / hybrid 专属坑
+
+1. **锚点 vs 显示名分离**：View 控件真机定位首选 `resource-id`（稳定、唯一），文案次之（多语言下会变）。但**功能点名 / 显示名永远用文案**——`resource_id` 是给自动化定位用的，`name` 是给人看的。阶段② 用 `raw_identifier`/`tap_by` 记锚点，`name` 记文案，两者不混。
+2. **Adapter / ViewHolder 列表行**：`RecyclerView`/`ListView` 的 `itemView.setOnClickListener` 在 Adapter 里，`resource_id` 是行布局的 `@+id`，运行时逐行重复 N 次——按同构家族压缩为 1 条，`type:"RecyclerViewItem"/"ListViewItem"`，notes 标「数据驱动列表」。
+3. **Fragment 是页不是组件**：`FragmentTransaction.replace(R.id.container, XFragment())` 里的 `R.id.container` 是容器，不是页；`to` = Fragment id，边的 `from` 在触发 Fragment 替换的 UI 处。单 Activity 多 Fragment 的 app，Activity 是壳页（`contains` 指向默认 Fragment），各 Fragment 独立成页。
+4. **nav_graph.xml 导航**：Navigation Component 的 `navigate(R.id.action_a_to_b)` 必须回查 `res/navigation/*.xml` 的 `<action>`/`<fragment android:id>` 解析目的 Fragment，不能只记 `R.id.action_*` 字面量。
+5. **@string 文案真值（View 版）**：`android:text="@string/x"` / `getString(R.string.x)` 同 Compose 一样要解析到 `strings.xml` 实际值（跨 `res/values*` 所有模块）；EditText 取 `android:hint`、ImageView 取 `android:contentDescription`。严禁用资源 key 名反推。
+6. **hybrid 边界**：`ComposeView`（XML 内嵌）内部是 compose 组件、`AndroidView`/`AndroidViewBinding`（Compose 内嵌）内部是 view 组件。边界控件 framework 标**内层**、宿主页标**外层**——标反了会导致 view 组件的 `resource_id` 被漏掉。
+
+## 5. 口径
 
 - **功能点 = 交互组件**（`is_interactive=true`），逐条进 registry。
 - **数据驱动列表**（列表项 / 枚举 / 设置项 / 图标网格）按同构家族压缩为 1 条（如 `RecipeItem#recipe_item` 一条代表整列食谱卡），不逐项膨胀。

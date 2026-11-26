@@ -6,7 +6,8 @@ venv/
 
 # Generated artifacts (re-run the scripts to reproduce)
 **/spec/a2h/
-spec/.cache/
+**/spec/.cache/
+**/spec/framework.json
 *.xlsx
 *.merged.json
 *_ecat_checklist.md

@@ -1,0 +1,11 @@
+{
+  "app_name": "DemoView",
+  "app_package": "com.example.demo.view",
+  "architecture": "经典 View（XML layout + Activity/Fragment）；控件锚点 resource-id 优先、文案兜底；源码位置用 .kt 相对路径",
+  "account_state": "无账号体系（本地 mock）",
+  "traverse_notes": "3/5 屏实走（Items / Settings / Detail）；ConfirmDialogFragment 为条件弹窗、MainActivity 为 Activity 壳（同 Items 屏），未单列",
+  "output_prefix": "DemoView_安卓功能清单",
+  "device_map": {
+    "MainActivity": "page_0001_Items"
+  }
+}

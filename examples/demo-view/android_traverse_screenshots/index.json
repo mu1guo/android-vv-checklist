@@ -1,0 +1,27 @@
+[
+  {
+    "page_id": "page_0001_Items",
+    "host_id": "ListFragment",
+    "label": "Items",
+    "timestamp": "2026-11-26T10:00:00+08:00",
+    "screenshot": "page_0001_Items/screenshot.png",
+    "view_xml": "page_0001_Items/view.xml",
+    "clickable_count": 4
+  },
+  {
+    "page_id": "page_0002_Settings",
+    "label": "Settings",
+    "timestamp": "2026-11-26T10:01:00+08:00",
+    "screenshot": "page_0002_Settings/screenshot.png",
+    "view_xml": "page_0002_Settings/view.xml",
+    "clickable_count": 1
+  },
+  {
+    "page_id": "page_0003_Detail",
+    "label": "Detail",
+    "timestamp": "2026-11-26T10:02:00+08:00",
+    "screenshot": "page_0003_Detail/screenshot.png",
+    "view_xml": "page_0003_Detail/view.xml",
+    "clickable_count": 1
+  }
+]

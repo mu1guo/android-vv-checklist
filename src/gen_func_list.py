@@ -61,6 +61,9 @@ def _component_label(comp: dict) -> str:
         v = comp.get(key)
         if isinstance(v, str) and v.strip():
             return v.strip()
+    rid = comp.get("resource_id")
+    if isinstance(rid, str) and rid.strip():
+        return rid.strip().split("/")[-1]
     return ""
 
 
@@ -74,7 +77,7 @@ class Checklist:
         self.intents = _load(os.path.join(app_dir, "spec", "a2h", "test_intents.json"))
         self.units = _load_if(os.path.join(app_dir, "android_traverse_screenshots", "index.json")) or []
 
-        self.pages = list(self.tree.get("pages", [])) + list(self.tree.get("dialogs", []))
+        self.pages = list(self.tree.get("pages", [])) + list(self.tree.get("fragments", [])) + list(self.tree.get("dialogs", []))
         self.by_id = {p["id"]: p for p in self.pages}
         self.comp_by_page = {p["id"]: {c["id"]: c for c in p.get("components", [])} for p in self.pages}
         self.feat_label = {f["id"]: f["label"] for f in self.tree.get("features", [])}
@@ -201,7 +204,12 @@ class Checklist:
                 shot = os.path.relpath(os.path.join(self.app, "android_traverse_screenshots", unit["screenshot"]), HERE).replace("\\", "/")
 
             expect = self.intent_expect.get(fp) or hm.get("expected") or ""
-            action = f"在 {self._label(host_id) if host_id in self.by_id else host_id} 页面点击「{name}」"
+            page_label = self._label(host_id) if host_id in self.by_id else host_id
+            if hm.get("tap_by") == "resource_id":
+                rid = hm.get("resource_id") or name
+                action = f"在 {page_label} 页面点击 resource-id「{rid}」（文案「{name}」）"
+            else:
+                action = f"在 {page_label} 页面点击「{name}」"
 
             if is_noop:
                 actual = f"宿主页「{dev_label or host_id}」已到达；该控件源码为 no-op（点击无反应，范围外）"
@@ -242,7 +250,7 @@ class Checklist:
             note = "" if reached else self._unreached_note(pid)
             r = [
                 pid,
-                "Activity" if p.get("type") == "Activity" else ("弹窗" if pid in dialog_ids else "页面"),
+                "Activity" if p.get("type") == "Activity" else ("Fragment" if p.get("type") == "Fragment" else ("弹窗" if pid in dialog_ids else "页面")),
                 self.page_purpose(pid),
                 self.account_state,
                 "是" if reached else "否",

@@ -1,0 +1,284 @@
+{
+  "$schema_version": 1,
+  "schema_version": 1,
+  "source": {
+    "toolkit": "android-fact-tree",
+    "generated_at": "2026-11-26T00:00:00+00:00",
+    "android_root": "examples/demo-view/src",
+    "resolution_notes": {
+      "framework": "view",
+      "compose_signals": 0,
+      "view_signals": ["res/layout/*.xml", "setContentView", "Fragment"]
+    }
+  },
+  "app": {
+    "package": "com.example.demo.view",
+    "label": "DemoView",
+    "launcher_activity": "com.example.demo.view.MainActivity",
+    "launcher_short": "MainActivity",
+    "framework": "view",
+    "min_sdk": 24,
+    "target_sdk": 35,
+    "version_name": "1.0.0"
+  },
+  "features": [
+    {
+      "id": "com.example.demo.view.ui",
+      "label": "Items",
+      "screens": ["MainActivity", "ListFragment", "SettingsActivity", "DetailActivity", "ConfirmDialogFragment"],
+      "top_tokens": ["items", "settings", "detail"],
+      "strategy": "view_package_cluster"
+    }
+  ],
+  "pages": [
+    {
+      "id": "MainActivity",
+      "type": "Activity",
+      "screen_kind": "activity",
+      "framework": "view",
+      "label": "Main",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/view/MainActivity.kt",
+      "logical_feature_id": "com.example.demo.view.ui",
+      "route": null,
+      "is_start_destination": false,
+      "contains": ["ListFragment"],
+      "shows_dialogs": [],
+      "components": [],
+      "navigation": {"inbound": [], "outbound": [], "unresolved_hints": []},
+      "reach_paths": [],
+      "notes": null
+    },
+    {
+      "id": "SettingsActivity",
+      "type": "Activity",
+      "screen_kind": "activity",
+      "framework": "view",
+      "label": "Settings",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/view/SettingsActivity.kt",
+      "logical_feature_id": "com.example.demo.view.ui",
+      "route": null,
+      "is_start_destination": false,
+      "contains": [],
+      "shows_dialogs": [],
+      "components": [
+        {
+          "id": "btn_back",
+          "type": "ImageButton",
+          "parent_id": null,
+          "framework": "view",
+          "text": null,
+          "content_desc": "Back",
+          "resource_id": "com.example.demo.view:id/btn_back",
+          "click_handler": "onBackClick",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": null, "trigger": "back", "params": null, "is_dynamic": true},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/view/SettingsActivity.kt", "line": 30},
+          "notes": null
+        }
+      ],
+      "navigation": {
+        "inbound": [{"from": "ListFragment", "via_component": "btn_settings", "trigger": "click", "params": null, "is_dynamic": false, "source": "view_nav"}],
+        "outbound": [],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": null
+    },
+    {
+      "id": "DetailActivity",
+      "type": "Activity",
+      "screen_kind": "activity",
+      "framework": "view",
+      "label": "Detail",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/view/DetailActivity.kt",
+      "logical_feature_id": "com.example.demo.view.ui",
+      "route": null,
+      "is_start_destination": false,
+      "contains": [],
+      "shows_dialogs": [],
+      "components": [
+        {
+          "id": "btn_save",
+          "type": "Button",
+          "parent_id": null,
+          "framework": "view",
+          "text": "Save",
+          "content_desc": null,
+          "resource_id": "com.example.demo.view:id/btn_save",
+          "click_handler": "onSaveClick",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": null,
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/view/DetailActivity.kt", "line": 55},
+          "notes": null
+        }
+      ],
+      "navigation": {
+        "inbound": [{"from": "ListFragment", "via_component": "row_item", "trigger": "click", "params": null, "is_dynamic": false, "source": "view_nav"}],
+        "outbound": [],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": null
+    }
+  ],
+  "fragments": [
+    {
+      "id": "ListFragment",
+      "type": "Fragment",
+      "screen_kind": "fragment",
+      "framework": "view",
+      "label": "Items",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/view/ListFragment.kt",
+      "logical_feature_id": "com.example.demo.view.ui",
+      "route": null,
+      "is_start_destination": true,
+      "contains": [],
+      "shows_dialogs": ["ConfirmDialogFragment"],
+      "components": [
+        {
+          "id": "btn_settings",
+          "type": "ImageButton",
+          "parent_id": null,
+          "framework": "view",
+          "text": null,
+          "content_desc": "Settings",
+          "resource_id": "com.example.demo.view:id/btn_settings",
+          "click_handler": "onSettingsClick",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": "SettingsActivity", "trigger": "click", "params": null, "is_dynamic": false},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/view/ListFragment.kt", "line": 42},
+          "notes": null
+        },
+        {
+          "id": "row_item",
+          "type": "ListViewItem",
+          "parent_id": null,
+          "framework": "view",
+          "text": "Item",
+          "content_desc": null,
+          "resource_id": "com.example.demo.view:id/row_item",
+          "click_handler": "onItemClick",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": "DetailActivity", "trigger": "click", "params": null, "is_dynamic": false},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/view/ListFragment.kt", "line": 60},
+          "notes": "数据驱动列表：行按同构家族压缩为 1 条"
+        },
+        {
+          "id": "btn_confirm",
+          "type": "Button",
+          "parent_id": null,
+          "framework": "view",
+          "text": "Confirm",
+          "content_desc": null,
+          "resource_id": "com.example.demo.view:id/btn_confirm",
+          "click_handler": "onConfirmClick",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": {"to_page": "ConfirmDialogFragment", "trigger": "click", "params": null, "is_dynamic": false},
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/view/ListFragment.kt", "line": 80},
+          "notes": null
+        },
+        {
+          "id": "btn_more",
+          "type": "ImageButton",
+          "parent_id": null,
+          "framework": "view",
+          "text": null,
+          "content_desc": "More",
+          "resource_id": "com.example.demo.view:id/btn_more",
+          "click_handler": "onMoreClick",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": null,
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/view/ListFragment.kt", "line": 90},
+          "notes": "no-op stub（onMoreClick 空实现）"
+        }
+      ],
+      "navigation": {
+        "inbound": [],
+        "outbound": [
+          {"to": "SettingsActivity", "via_component": "btn_settings", "trigger": "click", "params": null, "is_dynamic": false, "source": "view_nav"},
+          {"to": "DetailActivity", "via_component": "row_item", "trigger": "click", "params": null, "is_dynamic": false, "source": "view_nav"},
+          {"to": "ConfirmDialogFragment", "via_component": "btn_confirm", "trigger": "click", "params": null, "is_dynamic": false, "source": "view_nav"}
+        ],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": null
+    }
+  ],
+  "dialogs": [
+    {
+      "id": "ConfirmDialogFragment",
+      "type": "Dialog",
+      "screen_kind": "dialog",
+      "framework": "view",
+      "label": "Confirm",
+      "purpose": null,
+      "android_file": "app/src/main/java/com/example/demo/view/ConfirmDialogFragment.kt",
+      "logical_feature_id": "com.example.demo.view.ui",
+      "route": null,
+      "is_start_destination": false,
+      "contains": [],
+      "shows_dialogs": [],
+      "components": [
+        {
+          "id": "btn_ok",
+          "type": "Button",
+          "parent_id": null,
+          "framework": "view",
+          "text": "OK",
+          "content_desc": null,
+          "resource_id": "com.example.demo.view:id/btn_ok",
+          "click_handler": "onOkClick",
+          "is_interactive": true,
+          "triggers": ["click"],
+          "navigation": null,
+          "source_anchor": {"file": "app/src/main/java/com/example/demo/view/ConfirmDialogFragment.kt", "line": 20},
+          "notes": null
+        }
+      ],
+      "navigation": {
+        "inbound": [{"from": "ListFragment", "via_component": "btn_confirm", "trigger": "click", "params": null, "is_dynamic": false, "source": "view_nav"}],
+        "outbound": [],
+        "unresolved_hints": []
+      },
+      "reach_paths": [],
+      "notes": "条件弹窗（完成操作后弹出）"
+    }
+  ],
+  "flow_graph": {
+    "nodes": [
+      {"id": "MainActivity", "type": "Activity", "label": "Main"},
+      {"id": "ListFragment", "type": "Fragment", "label": "Items"},
+      {"id": "SettingsActivity", "type": "Activity", "label": "Settings"},
+      {"id": "DetailActivity", "type": "Activity", "label": "Detail"},
+      {"id": "ConfirmDialogFragment", "type": "Dialog", "label": "Confirm"}
+    ],
+    "edges": [
+      {"from": "ListFragment", "to": "SettingsActivity", "via_component": "btn_settings", "trigger": "click", "is_dynamic": false},
+      {"from": "ListFragment", "to": "DetailActivity", "via_component": "row_item", "trigger": "click", "is_dynamic": false},
+      {"from": "ListFragment", "to": "ConfirmDialogFragment", "via_component": "btn_confirm", "trigger": "click", "is_dynamic": false}
+    ]
+  },
+  "dependency_graph": null,
+  "stats": {
+    "total_pages": 3,
+    "total_fragments": 1,
+    "total_dialogs": 1,
+    "total_components": 7,
+    "total_navigation_edges": 3,
+    "total_features": 1,
+    "dynamic_targets": 1,
+    "components_with_parent": 0,
+    "uncertain_items": 0
+  }
+}

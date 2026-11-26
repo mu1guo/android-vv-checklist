@@ -15,7 +15,8 @@
         "package": { "type": ["string", "null"] },
         "label": { "type": ["string", "null"] },
         "launcher_activity": { "type": ["string", "null"] },
-        "launcher_short": { "type": ["string", "null"] }
+        "launcher_short": { "type": ["string", "null"] },
+        "framework": { "enum": ["compose", "view", "hybrid"] }
       }
     },
     "features": {
@@ -64,6 +65,7 @@
         "id": { "type": "string" },
         "type": { "type": "string" },
         "screen_kind": { "type": "string" },
+        "framework": { "enum": ["compose", "view", "hybrid"] },
         "label": { "type": ["string", "null"] },
         "purpose": { "type": ["string", "null"] },
         "android_file": { "type": ["string", "null"] },
@@ -92,8 +94,11 @@
         "id": { "type": "string" },
         "type": { "type": "string" },
         "parent_id": { "type": ["string", "null"] },
+        "framework": { "enum": ["compose", "view"] },
         "text": { "type": ["string", "null"] },
         "content_desc": { "type": ["string", "null"] },
+        "resource_id": { "type": ["string", "null"] },
+        "click_handler": { "type": ["string", "null"] },
         "is_interactive": { "type": "boolean" },
         "triggers": { "type": "array", "items": { "type": "string" } },
         "navigation": {
